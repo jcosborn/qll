@@ -187,7 +187,7 @@ main(int argc, char *argv[])
   int nthreads = 1;
 
   real *v1, *v2, *u[8], *uu3[8], *tm, *tv;
-  real mass = 1;
+  real mass = 0.5;
 #pragma omp parallel
   {
     nthreads = omp_get_num_threads();
@@ -226,8 +226,8 @@ main(int argc, char *argv[])
       t = (t/64) + (t%64);
       t = (t/64) + (t%64);
       t = (t/64) + (t%64);
-      u[j][i] = t;
-      uu3[j][i] = t - 32;
+      u[j][i] = t/64.;
+      uu3[j][i] = (t - 32)/32.;
       //u[j][i] = (j==0) * (i==0);
       //uu3[j][i] = 0;
       //u[j][i] = j*18*vol + i;
@@ -375,10 +375,10 @@ main(int argc, char *argv[])
   }
   t0 = dtime() - t0;
   double flops = flops0 + 36*vol;
-  printf0("solve: %10g %10g mf: %g\n", t0,1e6*t0/nrep,its*1e-6*flops*nrep/t0);
+  printf0("solve: %i %10g %10g mf: %g\n",its,t0,1e6*t0/nrep,its*1e-6*flops*nrep/t0);
   //dslashPrintTimer(1.0/nrep);
 
-  mass = 10;
+  mass = 0.5;
   int maxmasses = 10;
   double masses[maxmasses];
   masses[0] = mass;
@@ -405,7 +405,7 @@ main(int argc, char *argv[])
     }
     t0 = dtime() - t0;
     flops = flops0 + (24+12*im)*vol;
-    printf0("solve %i: %10g %10g mf: %g\n",im,t0,1e6*t0/nrep,
+    printf0("solve %i: %i %10g %10g mf: %g\n",im,its,t0,1e6*t0/nrep,
 	    its*1e-6*flops*nrep/t0);
     //dslashPrintTimer(1.0/nrep);
   }
