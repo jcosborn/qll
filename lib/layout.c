@@ -49,6 +49,19 @@ layoutSetup(Layout *l)
       exit(-1);
     }
     icb = l->outerGeom[icbd]/2;
+    if((icb&1)==0) {
+      if(l->myrank==0) {
+	printf("error in cb choice\n");
+	PRINTV("physGeom:", "%i", l->physGeom, nd);
+	PRINTV("rankGeom:", "%i", l->rankGeom, nd);
+	PRINTV("localGeom:", "%i", l->localGeom, nd);
+	PRINTV("outerGeom:", "%i", l->outerGeom, nd);
+	PRINTV("innerGeom:", "%i", l->innerGeom, nd);
+	printf("innerCb: %i\n", icb);
+	printf("innerCbDir: %i\n", icbd);
+      }
+      exit(-1);
+    }
   }
   l->physVol = pvol;
   l->nSites = lvol;
@@ -110,8 +123,13 @@ layoutIndex(Layout *l, LayoutIndex *li, int coords[])
   int nd = l->nDim;
   int ri = lex_i(coords, l->rankGeom, l->localGeom, nd);
   int ii = lex_i(coords, l->innerGeom, l->outerGeom, nd);
-  int ib = ii ^ (ii>>2);
-  ib = (ib ^ (ib>>1))&1;
+  int ib = 0;
+  for(int i=0; i<nd; i++) {
+    int xi = coords[i]/l->outerGeom[i];
+    int li = xi % l->innerGeom[i];
+    ib += li * l->outerGeom[i];
+  }
+  ib &= 1;
   coords[l->innerCbDir] += l->innerCb * ib;
   int oi = lex_i(coords, l->outerGeom, NULL, nd);
   coords[l->innerCbDir] -= l->innerCb * ib;
@@ -131,8 +149,7 @@ layoutCoord(Layout *l, int *coords, LayoutIndex *li)
   lex_x(cr, li->rank, l->rankGeom, nd);
   int p = 0;
   int ll = li->index % l->nSitesInner;
-  int ib = ll ^ (ll>>2);
-  ib = (ib ^ (ib>>1))&1;
+  int ib = 0;
   for(int i=0; i<nd; i++) {
     int w = l->innerGeom[i];
     int wl = l->outerGeom[i];
@@ -142,7 +159,9 @@ layoutCoord(Layout *l, int *coords, LayoutIndex *li)
     //printf("cr[%i]: %i\n", i, c);
     p += c;
     ll = ll / w;
+    ib += k*wl;
   }
+  ib &= 1;
   int ii = li->index / l->nSitesInner;
   if(ii>=l->nEvenOuter) {
     ii -= l->nEvenOuter;

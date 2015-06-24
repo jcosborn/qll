@@ -232,7 +232,8 @@ main(int argc, char *argv[])
       //uu3[j][i] = 0;
       //u[j][i] = j*18*vol + i;
       //uu3[j][i] = j*18*vol + i;
-      //uu3[j][i] = 100*(r+s) + 10*e + l;
+      //u[j][i] = 1000*(r+s) + 10*e + l;
+      //uu3[j][i] = 1000*(r+s) + 10*e + l;
       //u[j][i] = cos(t);
       //uu3[j][i] = sin(t - 10);
       //u[j][i] = 2*((((i/layout.nSitesInner)%18)%8) == 0);
