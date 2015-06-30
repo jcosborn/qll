@@ -65,7 +65,7 @@ void P(wilsonDslashPrintTimer)(double scale);
 
 void qopStagDslashInit(int *argc, char ***argv);
 void qopStagDslashFini(void);
-void qopStagDslashSetup(Layout *l);
+void qopStagDslashSetup(Layout *l, int *rg);
 void qopShift(Layout *l, real *xx, real *yy, int nelem, int dir, int len);
 void qopTransportM(Layout *l, real *xx, real *mm, real *yy, int dir, int len);
 void qopSmear(Field *fl[], Field *ll[], Fat7Coeffs *coef, Field *u[], Field *ul[]);

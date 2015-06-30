@@ -18,7 +18,29 @@ qopStagDslashFini(void)
 }
 
 void
-qopStagDslashSetup(Layout *l)
+get_rankGeom(QDP_Lattice *lat, int myrank, int nd, int *ls, int *rg)
+{
+  int n = QDP_numsites_L(lat, myrank);
+  int xmin[nd], xmax[nd];
+  for(int i=0; i<nd; i++) {
+    xmin[i] = ls[i];
+    xmax[i] = 0;
+  }
+  for(int i=0; i<n; i++) {
+    int x[nd];
+    QDP_get_coords(x, myrank, i);
+    for(int j=0; j<nd; j++) {
+      if(x[j]<xmin[j]) xmin[j] = x[j];
+      if(x[j]>xmax[j]) xmax[j] = x[j];
+    }
+  }
+  for(int i=0; i<nd; i++) {
+    rg[i] = ls[i]/(1+xmax[i]-xmin[i]);
+  }
+}
+
+void
+qopStagDslashSetup(Layout *l, int *rg)
 {
   int nd = l->nDim;
   int *ls = l->physGeom;
@@ -33,6 +55,9 @@ qopStagDslashSetup(Layout *l)
   QDP_create_layout();
   //TRACE_ALL;
   //QMP_barrier();
+  if(rg) {
+    get_rankGeom(QDP_get_default_lattice(), l->myrank, nd, ls, rg);
+  }
   QOP_layout_t qoplayout = QOP_LAYOUT_ZERO;
   qoplayout.latdim = nd;
   qoplayout.latsize = (int *) malloc(nd*sizeof(int));

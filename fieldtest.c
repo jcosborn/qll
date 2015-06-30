@@ -64,7 +64,7 @@ main(int argc, char *argv[])
   P(stagDslashSetup)(&layout, nd, ls, NULL);
   t0 = dtime() - t0;
   printf0("stagDslashSetup time: %g\n", t0);
-  qopStagDslashSetup(&layout);
+  qopStagDslashSetup(&layout, NULL);
   int nthreads = 1;
 #pragma omp parallel
   {

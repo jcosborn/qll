@@ -164,7 +164,7 @@ main(int argc, char *argv[])
 
 #define ND 4
   int nd = ND;
-  int ls[ND];
+  int ls[ND], rg[ND];
   double nrepfac = 1e7;
   for(int i=0; i<nd; i++) ls[i] = 4;
   for(int i=1,j=0; argv[i]; i++) {
@@ -177,10 +177,17 @@ main(int argc, char *argv[])
 
   layout.nranks = QMP_get_number_of_nodes();
   layout.myrank = QMP_get_node_number();
+  layout.nDim = nd;
+  layout.physGeom = ls;
   myrank = layout.myrank;
   printf0("qopStagDslashInit time: %g\n", t0);
+
   t0 = dtime();
-  P(stagDslashSetup)(&layout, nd, ls, NULL);
+  qopStagDslashSetup(&layout, rg);
+  t0 = dtime() - t0;
+  printf0("qopStagDslashSetup time: %g\n", t0);
+  t0 = dtime();
+  P(stagDslashSetup)(&layout, nd, ls, rg);
   t0 = dtime() - t0;
   printf0("stagDslashSetup time: %g\n", t0);
   int vol = layout.nSites;
@@ -243,12 +250,6 @@ main(int argc, char *argv[])
   norm2(v2, 3*vol);
   getplaq(u, &layout, 3);
 
-  //QMP_barrier();
-  //TRACE_ALL;
-  t0 = dtime();
-  qopStagDslashSetup(&layout);
-  t0 = dtime() - t0;
-  printf0("qopStagDslashSetup time: %g\n", t0);
   //QMP_barrier();
   //TRACE_ALL;
   for(int i=0; i<4; i++) {
