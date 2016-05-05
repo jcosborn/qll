@@ -15,8 +15,8 @@ OMP = -fopenmp
 
 #OPT2 = -opt-prefetch-distance=64,8 -opt-streaming-cache-evict=0 -opt-streaming-stores always
 
-#COPT = $(shell $(QLACONF) --copts) -g -DQDP_PROFILE $(OPT2)
-COPT = -Wall -std=c99 -O3 -march=core-avx2 -ffast-math -funroll-loops -fprefetch-loop-arrays -fpeel-loops -funswitch-loops -g -DQDP_PROFILE
+COPT = $(shell $(QLACONF) --copts) -g -DQDP_PROFILE $(OPT2)
+#COPT = -Wall -std=c99 -O3 -march=core-avx2 -ffast-math -funroll-loops -fprefetch-loop-arrays -fpeel-loops -funswitch-loops -g -DQDP_PROFILE
 #COPT += -DC1
 #COPT += -DC2
 #COPT += -DC4

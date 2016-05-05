@@ -39,7 +39,7 @@ transporterStartT(Transporter *t, real *dest, real *src, int td, ThreadCtx *TC)
   //DSTAMP(t0);
   if(tid==0) {
     if(t->si.nRecvRanks>0) {
-      startRecvBuf(t->sb.sbuf);
+      startRecvBuf(&(t->sb));
     }
   }
 
@@ -55,7 +55,7 @@ transporterStartT(Transporter *t, real *dest, real *src, int td, ThreadCtx *TC)
     T0WAIT;
     //DSTAMP(tt2);
     if(tid==0) {
-      startSendBuf(&t->sb);
+      startSendBuf(&(t->sb));
       //printf("vvs: %i\tpack: %i\n", s->vvs, s->pack);
       //for(int i=0; i<8; i++) {
       //printf("idxSend[%i]: %i\n", i, s->idxSend[i]);
@@ -103,7 +103,7 @@ transporterWaitT(Transporter *t, ThreadCtx *TC)
     //double tt1;
     if(t->si.nRecvRanks>0) {
       if(tid==0) {
-	waitRecvBuf(&t->sb);
+	waitRecvBuf(&(t->sb));
       }
       //STAMP(tt1);
       TWAIT0;
@@ -136,7 +136,7 @@ transporterWaitT(Transporter *t, ThreadCtx *TC)
     //DSTAMP(tt3);
     if(t->si.nRecvRanks>0) {
       if(tid==0) {
-	doneRecvBuf(&t->sb);
+	doneRecvBuf(&(t->sb));
       }
     }
     //DSTAMP(tt4);
@@ -148,7 +148,7 @@ transporterWaitT(Transporter *t, ThreadCtx *TC)
   if(t->si.nSendRanks>0) {
     //DSTAMP(tt0);
     if(tid==0) {
-      waitSendBuf(&t->sb);
+      waitSendBuf(&(t->sb));
     }
     //DSTAMP(tt1);
     //tws += tt1-tt0;

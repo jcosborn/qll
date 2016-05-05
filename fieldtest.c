@@ -139,7 +139,7 @@ main(int argc, char *argv[])
   Transporter T0, M0, Tb0;
   ShiftIndices *si0 = P(getShift)(dir, 1, "all"); // from forward 0
   ShiftIndices *sib0 = P(getShift)(dir, -1, "all"); // from forward 0
-  layoutSubset(&all, &layout, "all");
+  //layoutSubset(&all, &layout, "all");
   //transporterNew(&T0, NULL, si0, &all, nelemV, nc);
   //transporterNew(&Tb0, NULL, sib0, &all, nelemV, nc);
   transporterNew(&T0, u.f, si0, &all, nelemV, nc);
