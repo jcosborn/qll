@@ -82,7 +82,8 @@ typedef struct {
 
 #ifdef __powerpc__
 //#define SYNC __sync()
-#define SYNC __eieio()
+//#define SYNC __eieio()
+#define SYNC __sync_synchronize()
 #else
 #define SYNC
 #endif
